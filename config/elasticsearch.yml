@@ -1,0 +1,37 @@
+cluster:
+  name: ${CLUSTER_NAME}
+
+node:
+  master: ${NODE_MASTER}
+  data: ${NODE_DATA}
+
+path:
+  data: /data/data
+  logs: /data/log
+  plugins: /elasticsearch/plugins
+  work: /data/work
+
+bootstrap:
+  mlockall: true
+
+http:
+  enabled: ${HTTP_ENABLE}
+  compression: true
+  cors:
+    enabled: ${HTTP_CORS_ENABLE}
+    allow-origin: ${HTTP_CORS_ALLOW_ORIGIN}
+
+cloud:
+  k8s:  
+    servicedns: ${DISCOVERY_SERVICE}
+discovery:
+  type: io.fabric8.elasticsearch.discovery.k8s.K8sDiscoveryModule
+  zen:
+    minimum_master_nodes: ${MINIMUM_MASTER_NODES}
+    ping:
+      multicast:
+        enabled: false
+
+index:
+    number_of_shards: ${NUMBER_OF_SHARDS}
+    number_of_replicas: ${NUMBER_OF_REPLICAS}
