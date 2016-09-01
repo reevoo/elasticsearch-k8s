@@ -7,7 +7,7 @@ ENV VERSION 1.5.2
 RUN apk upgrade --no-cache
 
 RUN apk add --no-cache \
-    openjdk8-jre \
+    openjdk7-jre \
     su-exec \
     curl \
     ca-certificates \
