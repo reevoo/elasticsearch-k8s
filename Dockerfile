@@ -4,13 +4,18 @@ MAINTAINER devops@reevoo.com
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm/jre
 ENV VERSION 1.5.2
 
-RUN apk upgrade --no-cache
-
-RUN apk add --no-cache \
+RUN apk upgrade --no-cache \
+  && apk add --no-cache \
+    ca-certificates \
     openjdk7-jre \
     su-exec \
     curl \
-    ca-certificates \
+
+  # Fixes java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
+  # only openjdk8-jre on alpine has the proper hooks to do this when the package is installed
+  && rm -f $JAVA_HOME/lib/security/cacerts \
+  && ln -sf /etc/ssl/certs/java/cacerts $JAVA_HOME/lib/security/cacerts \
+
   && ( curl -Lskj https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-$VERSION.tar.gz |  gunzip -c - | tar xf - ) \
   && mv /elasticsearch-$VERSION /elasticsearch \
   && rm -rf $(find /elasticsearch | egrep "(\.(exe|bat)$|sigar/.*(dll|winnt|x86-linux|solaris|ia64|freebsd|macosx))") \
