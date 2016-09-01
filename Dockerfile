@@ -18,11 +18,12 @@ RUN apk add --no-cache \
   && adduser -D -g '' elasticsearch
 
 ADD do_not_use.yml /elasticsearch/config/elasticsearch.yml
-RUN /elasticsearch/bin/plugin install io.fabric8/elasticsearch-cloud-kubernetes/1.2.1
-RUN /elasticsearch/bin/plugin install lmenezes/elasticsearch-kopf/v1.6.1
-RUN /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.5.1
-COPY config /elasticsearch/config
 
+RUN /elasticsearch/bin/plugin install io.fabric8/elasticsearch-cloud-kubernetes/1.2.1 \
+  && /elasticsearch/bin/plugin install lmenezes/elasticsearch-kopf/v1.6.1 \
+  && /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.5.1
+
+COPY config /elasticsearch/config
 COPY es.sh /
 
 # Set environment variables defaults
