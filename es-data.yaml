@@ -27,7 +27,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: "CLUSTER_NAME"
-          value: "reevoo_test"
+          value: "reevoo"
         - name: NODE_MASTER
           value: "false"
         - name: HTTP_ENABLE

@@ -28,7 +28,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: "CLUSTER_NAME"
-          value: "reevoo_test"
+          value: "reevoo"
         - name: NODE_MASTER
           value: "true"
         - name: NODE_DATA
