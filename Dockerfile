@@ -7,10 +7,11 @@ ENV VERSION 1.5.2
 RUN apk upgrade --no-cache \
   && apk add --no-cache \
     ca-certificates \
+    curl \
     java-cacerts \
     openjdk7-jre \
+    sigar \
     su-exec \
-    curl \
 
   # Fixes java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
   # only openjdk8-jre on alpine has the proper hooks to do this when the package is installed
