@@ -13,6 +13,7 @@ RUN apk upgrade --no-cache \
     sigar \
     su-exec \
 
+
   # Fixes java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
   # only openjdk8-jre on alpine has the proper hooks to do this when the package is installed
   && rm -f $JAVA_HOME/lib/security/cacerts \
@@ -22,13 +23,17 @@ RUN apk upgrade --no-cache \
   && mv /elasticsearch-$VERSION /elasticsearch \
   && rm -rf $(find /elasticsearch | egrep "(\.(exe|bat)$|sigar/.*(dll|winnt|x86-linux|solaris|ia64|freebsd|macosx))") \
   && apk del curl \
-  && adduser -D -g '' elasticsearch
+  && adduser -D -g '' elasticsearch \
+
+  # Fix libsigar: the one vendored by elasticsearch does not seem to be portable to Alpine/musl
+  && ln -fs /usr/lib/libsigar-amd64-linux.so /elasticsearch/lib/sigar/libsigar-amd64-linux.so
 
 ADD do_not_use.yml /elasticsearch/config/elasticsearch.yml
 
 RUN /elasticsearch/bin/plugin install io.fabric8/elasticsearch-cloud-kubernetes/1.2.1 \
   && /elasticsearch/bin/plugin install lmenezes/elasticsearch-kopf/v1.6.1 \
-  && /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.5.1
+  && /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.5.1 \
+  && /elasticsearch/bin/plugin install elasticsearch/marvel/latest
 
 COPY config /elasticsearch/config
 COPY es.sh /
@@ -47,5 +52,6 @@ ENV NUMBER_OF_REPLICAS 1
 ENV NAMESPACE default
 ENV DISCOVERY_SERVICE elasticsearch-discovery
 ENV MINIMUM_MASTER_NODES 1
+ENV MARVEL_EXPORT_ENDPOINT elasticsearch:9200
 
 CMD ["/es.sh"]
